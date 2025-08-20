@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ATM Screen UI - HTML</title>
+  <style>
+    body {
+      background: #f3f4f6;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .atm-container {
+      background: #23272f;
+      border-radius: 16px;
+      box-shadow: 0 2px 20px rgba(0,0,0,0.12);
+      width: 340px;
+      padding: 32px 24px 24px 24px;
+      color: #fff;
+      text-align: center;
+    }
+    .bank-title {
+      font-size: 24px;
+      font-weight: bold;
+      margin-bottom: 12px;
+      letter-spacing: 1.5px;
+      color: #22d48b;
+    }
+    .screen {
+      background: #11131a;
+      margin: 18px 0;
+      padding: 28px 8px 22px 8px;
+      border-radius: 8px;
+      min-height: 62px;
+      font-size: 19px;
+      word-break: break-word;
+    }
+    .atm-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 13px;
+      margin-top: 8px;
+    }
+    .atm-buttons button {
+      background: #22d48b;
+      color: #11131a;
+      font-size: 17px;
+      padding: 9px 0;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background 0.3s;
+      font-weight: 500;
+    }
+    .atm-buttons button:hover {
+      background: #1eb97d;
+    }
+    .input-section {
+      margin: 16px 0;
+    }
+    .input-section input {
+      padding: 7px 10px;
+      font-size: 16px;
+      border-radius: 4px;
+      border: 1px solid #b0b0b0;
+      margin-right: 7px;
+      width: 110px;
+    }
+  </style>
+</head>
+<body>
+  <div class="atm-container">
+    <div class="bank-title">BANK OF INDIA</div>
+    <div class="screen" id="atmScreen">
+      Welcome! Please select an option below.
+    </div>
+    <div class="atm-buttons">
+      <button onclick="showWithdraw()">Withdraw</button>
+      <button onclick="showDeposit()">Deposit</button>
+      <button onclick="showBalance()">Balance Inquiry</button>
+      <button onclick="showExit()">Exit</button>
+    </div>
+    <div class="input-section" id="inputArea" style="display:none;">
+      <input type="number" id="amount" placeholder="Enter Amount" />
+      <button onclick="performTransaction()">Submit</button>
+    </div>
+  </div>
+  <script>
+    let balance = 10000; // Starting balance
+
+    function updateScreen(text) {
+      document.getElementById('atmScreen').innerText = text;
+    }
+
+    function showWithdraw() {
+      updateScreen('Enter amount to withdraw:');
+      document.getElementById('inputArea').style.display = 'block';
+      document.getElementById('amount').value = '';
+      document.getElementById('amount').focus();
+      document.getElementById('amount').setAttribute('data-mode', 'withdraw');
+    }
+
+    function showDeposit() {
+      updateScreen('Enter amount to deposit:');
+      document.getElementById('inputArea').style.display = 'block';
+      document.getElementById('amount').value = '';
+      document.getElementById('amount').focus();
+      document.getElementById('amount').setAttribute('data-mode', 'deposit');
+    }
+
+    function showBalance() {
+      updateScreen('Your current balance is:\n₹' + balance);
+      document.getElementById('inputArea').style.display = 'none';
+    }
+
+    function showExit() {
+      updateScreen('Thank you for using ATM.\nHave a nice day!');
+      document.getElementById('inputArea').style.display = 'none';
+    }
+
+    function performTransaction() {
+      const amt = parseInt(document.getElementById('amount').value);
+      const mode = document.getElementById('amount').getAttribute('data-mode');
+
+      if (isNaN(amt) || amt <= 0) {
+        updateScreen('Please enter a valid amount.');
+        return;
+      }
+
+      if (mode == 'withdraw') {
+        if (amt > balance) {
+          updateScreen('Insufficient balance.');
+        } else {
+          balance -= amt;
+          updateScreen('Withdrawn: ₹' + amt + '\nNew Balance: ₹' + balance);
+        }
+      } else if (mode == 'deposit') {
+        balance += amt;
+        updateScreen('Deposited: ₹' + amt + '\nNew Balance: ₹' + balance);
+      }
+      document.getElementById('inputArea').style.display = 'none';
+    }
+  </script>
+</body>
+</html>
